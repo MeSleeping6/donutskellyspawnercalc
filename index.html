@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skeleton Spawner to Bone Rate Calculator</title>
+  <!-- Favicon (tiny skeleton) -->
+  <link rel="icon" href="https://i.imgur.com/F4Z0U6S.png" type="image/png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .calculator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    input[type="number"] {
+      width: 100px;
+      padding: 5px;
+      font-size: 16px;
+    }
+    select {
+      padding: 5px;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 18px;
+      text-align: center;
+    }
+    footer {
+      margin-top: auto;
+      padding-top: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Skeleton Spawner → Bone Rate Calculator</h1>
+  <div class="calculator">
+    <label for="spawners">Skeleton Spawners:</label>
+    <input type="number" id="spawners" min="1" value="1">
+    
+    <label for="timeframe">Time Frame:</label>
+    <select id="timeframe">
+      <option value="1">Minute</option>
+      <option value="60">Hour</option>
+      <option value="720">12 Hours</option>
+    </select>
+  </div>
+  <div class="result" id="result">Bones: 2.07</div>
+
+  <footer>Made by mesleeping6</footer>
+
+  <script>
+    const dataPoints = [
+      { spawners: 1, bones: 2.07 },
+      { spawners: 5, bones: 10.16 },
+      { spawners: 10, bones: 20.22 },
+      { spawners: 100, bones: 190.05 },
+      { spawners: 500, bones: 737.90 },
+      { spawners: 800, bones: 992.47 },
+      { spawners: 1000, bones: 1113.32 },
+      { spawners: 1600, bones: 1332.60 }
+    ];
+
+    function interpolate(spawnerCount) {
+      if (spawnerCount <= dataPoints[0].spawners) return dataPoints[0].bones;
+      if (spawnerCount >= dataPoints[dataPoints.length-1].spawners) return dataPoints[dataPoints.length-1].bones;
+
+      for (let i = 0; i < dataPoints.length - 1; i++) {
+        let a = dataPoints[i];
+        let b = dataPoints[i + 1];
+        if (spawnerCount >= a.spawners && spawnerCount <= b.spawners) {
+          // Log-log interpolation for non-linear scaling
+          let logSpawners = Math.log(spawnerCount);
+          let logA = Math.log(a.spawners);
+          let logB = Math.log(b.spawners);
+          let logBonesA = Math.log(a.bones);
+          let logBonesB = Math.log(b.bones);
+          let t = (logSpawners - logA) / (logB - logA);
+          let logBones = logBonesA + t * (logBonesB - logBonesA);
+          return Math.exp(logBones);
+        }
+      }
+    }
+
+    function updateResult() {
+      const spawners = parseFloat(document.getElementById('spawners').value);
+      const multiplier = parseFloat(document.getElementById('timeframe').value);
+      if (isNaN(spawners) || spawners < 1) {
+        document.getElementById('result').textContent = 'Enter a valid number of spawners';
+        return;
+      }
+      const bonesPerMin = interpolate(spawners);
+      const totalBones = bonesPerMin * multiplier;
+      document.getElementById('result').textContent = 'Bones: ' + totalBones.toFixed(2);
+    }
+
+    document.getElementById('spawners').addEventListener('input', updateResult);
+    document.getElementById('timeframe').addEventListener('change', updateResult);
+
+    // Initial display
+    updateResult();
+  </script>
+</body>
+</html>
