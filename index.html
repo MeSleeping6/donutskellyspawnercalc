@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skeleton Spawner to Bone Rate Calculator</title>
-  <!-- Favicon (tiny skeleton) -->
-  <link rel="icon" href="https://i.imgur.com/F4Z0U6S.png" type="image/png">
+  <title>Skeleton Spawner → Bone Rate Calculator</title>
+  <link rel="icon" href="https://website.donutsmp.org/logo.png" type="image/png">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      font-family: 'Arial', sans-serif;
+      background: #f0f0f0;
+      color: #222;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -18,33 +18,57 @@
       margin: 0;
       padding: 20px;
     }
+
     h1 {
       margin-bottom: 20px;
       text-align: center;
+      color: #5a2c91;
+      text-shadow: 1px 1px 2px #00000033;
     }
+
     .calculator {
       display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
       flex-wrap: wrap;
+      gap: 15px;
       justify-content: center;
+      background: #ffffffdd;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      max-width: 500px;
+      width: 100%;
     }
-    input[type="number"] {
-      width: 100px;
-      padding: 5px;
+
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      min-width: 120px;
+    }
+
+    input, select {
+      padding: 8px;
       font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
-    select {
-      padding: 5px;
-      font-size: 16px;
-    }
+
     .result {
-      margin-top: 10px;
+      margin-top: 15px;
       font-weight: bold;
       font-size: 18px;
       text-align: center;
+      background: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      width: fit-content;
     }
+
     footer {
       margin-top: auto;
       padding-top: 20px;
@@ -56,19 +80,29 @@
 <body>
   <h1>Skeleton Spawner → Bone Rate Calculator</h1>
   <div class="calculator">
-    <label for="spawners">Skeleton Spawners:</label>
-    <input type="number" id="spawners" min="1" value="1">
-    
-    <label for="timeframe">Time Frame:</label>
-    <select id="timeframe">
-      <option value="1">Minute</option>
-      <option value="60">Hour</option>
-      <option value="720">12 Hours</option>
-    </select>
-  </div>
-  <div class="result" id="result">Bones: 2.07</div>
+    <div class="input-group">
+      <label for="spawners">Skeleton Spawners</label>
+      <input type="number" id="spawners" min="1" value="1">
+    </div>
 
-  <footer>Made by mesleeping6</footer>
+    <div class="input-group">
+      <label for="timeframe">Time Frame</label>
+      <select id="timeframe">
+        <option value="1">Minute</option>
+        <option value="60">Hour</option>
+        <option value="720">12 Hours</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="price">Price per Bone ($)</label>
+      <input type="number" id="price" min="0" value="0">
+    </div>
+  </div>
+
+  <div class="result" id="result">Bones: 2.07 | Earnings: $0</div>
+
+  <footer>MeSleeping6</footer>
 
   <script>
     const dataPoints = [
@@ -90,7 +124,7 @@
         let a = dataPoints[i];
         let b = dataPoints[i + 1];
         if (spawnerCount >= a.spawners && spawnerCount <= b.spawners) {
-          // Log-log interpolation for non-linear scaling
+          // log-log interpolation for non-linear scaling
           let logSpawners = Math.log(spawnerCount);
           let logA = Math.log(a.spawners);
           let logB = Math.log(b.spawners);
@@ -103,22 +137,35 @@
       }
     }
 
+    function formatAbbreviated(value) {
+      if (value >= 1_000_000_000) return (value/1_000_000_000).toFixed(2) + 'B';
+      if (value >= 1_000_000) return (value/1_000_000).toFixed(2) + 'M';
+      if (value >= 1_000) return (value/1_000).toFixed(2) + 'K';
+      return value.toFixed(2);
+    }
+
     function updateResult() {
       const spawners = parseFloat(document.getElementById('spawners').value);
       const multiplier = parseFloat(document.getElementById('timeframe').value);
+      const price = parseFloat(document.getElementById('price').value);
+
       if (isNaN(spawners) || spawners < 1) {
         document.getElementById('result').textContent = 'Enter a valid number of spawners';
         return;
       }
+
       const bonesPerMin = interpolate(spawners);
       const totalBones = bonesPerMin * multiplier;
-      document.getElementById('result').textContent = 'Bones: ' + totalBones.toFixed(2);
+      const earnings = price * totalBones;
+
+      document.getElementById('result').textContent = 
+        `Bones: ${formatAbbreviated(totalBones)} | Earnings: $${formatAbbreviated(earnings)}`;
     }
 
     document.getElementById('spawners').addEventListener('input', updateResult);
     document.getElementById('timeframe').addEventListener('change', updateResult);
+    document.getElementById('price').addEventListener('input', updateResult);
 
-    // Initial display
     updateResult();
   </script>
 </body>
