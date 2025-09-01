@@ -1,172 +1,220 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skeleton Spawner → Bone Rate Calculator</title>
-  <link rel="icon" href="https://website.donutsmp.org/logo.png" type="image/png">
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: #f0f0f0;
-      color: #222;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skeleton Spawner → Bone Rate Calculator</title>
+<link rel="icon" href="https://website.donutsmp.org/logo.png" type="image/png">
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #ffffff;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    transition: background 0.3s, color 0.3s;
+  }
 
-    h1 {
-      margin-bottom: 20px;
-      text-align: center;
-      color: #5a2c91;
-      text-shadow: 1px 1px 2px #00000033;
-    }
+  h1 {
+    margin-bottom: 25px;
+    text-align: center;
+    color: #5a2c91;
+    text-shadow: 1px 1px 2px #00000033;
+    font-size: 2em;
+  }
 
-    .calculator {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      justify-content: center;
-      background: #ffffffdd;
-      padding: 20px 30px;
-      border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      max-width: 500px;
-      width: 100%;
-    }
+  .calculator {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    background: #ffffffdd;
+    padding: 25px 35px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    max-width: 550px;
+    width: 100%;
+  }
 
-    label {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
 
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      min-width: 120px;
-    }
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
 
-    input, select {
-      padding: 8px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
+  input, select {
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
 
-    .result {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 18px;
-      text-align: center;
-      background: #fff;
-      padding: 10px 20px;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      width: fit-content;
-    }
+  .radio-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
 
-    footer {
-      margin-top: auto;
-      padding-top: 20px;
-      font-size: 14px;
-      color: #555;
-    }
-  </style>
+  .result {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    background: #fff;
+    padding: 15px 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  }
+
+  footer {
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #222;
+  }
+
+  /* Background toggle button */
+  #bg-toggle {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #555;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s, border 0.3s;
+  }
+</style>
 </head>
 <body>
-  <h1>Skeleton Spawner → Bone Rate Calculator</h1>
-  <div class="calculator">
-    <div class="input-group">
-      <label for="spawners">Skeleton Spawners</label>
-      <input type="number" id="spawners" min="1" value="1">
-    </div>
+<h1>Skeleton Spawner → Bone Rate Calculator</h1>
 
-    <div class="input-group">
-      <label for="timeframe">Time Frame</label>
-      <select id="timeframe">
-        <option value="1">Minute</option>
-        <option value="60">Hour</option>
-        <option value="720">12 Hours</option>
-      </select>
-    </div>
-
-    <div class="input-group">
-      <label for="price">Price per Bone ($)</label>
-      <input type="number" id="price" min="0" value="0">
-    </div>
+<div class="calculator">
+  <div class="input-group">
+    <label for="spawners">Skeleton Spawners</label>
+    <input type="number" id="spawners" min="1" value="1">
   </div>
 
-  <div class="result" id="result">Bones: 2.07 | Earnings: $0</div>
+  <div class="input-group">
+    <label for="timeframe">Time Frame</label>
+    <select id="timeframe">
+      <option value="1">Minute</option>
+      <option value="60">Hour</option>
+      <option value="720">12 Hours</option>
+    </select>
+  </div>
 
-  <footer>MeSleeping6</footer>
+  <div class="input-group">
+    <label for="price">Price per Bone ($)</label>
+    <input type="number" id="price" min="0" value="0">
+  </div>
 
-  <script>
-    const dataPoints = [
-      { spawners: 1, bones: 2.07 },
-      { spawners: 5, bones: 10.16 },
-      { spawners: 10, bones: 20.22 },
-      { spawners: 100, bones: 190.05 },
-      { spawners: 500, bones: 737.90 },
-      { spawners: 800, bones: 992.47 },
-      { spawners: 1000, bones: 1113.32 },
-      { spawners: 1600, bones: 1332.60 }
-    ];
+  <div class="input-group">
+    <label>Calculate With</label>
+    <div class="radio-group">
+      <label><input type="radio" name="unit" value="bone" checked> Bones</label>
+      <label><input type="radio" name="unit" value="block"> Bone Blocks</label>
+    </div>
+  </div>
+</div>
 
-    function interpolate(spawnerCount) {
-      if (spawnerCount <= dataPoints[0].spawners) return dataPoints[0].bones;
-      if (spawnerCount >= dataPoints[dataPoints.length-1].spawners) return dataPoints[dataPoints.length-1].bones;
+<div class="result" id="result">Bones: 2.07 | Earnings: $0</div>
 
-      for (let i = 0; i < dataPoints.length - 1; i++) {
-        let a = dataPoints[i];
-        let b = dataPoints[i + 1];
-        if (spawnerCount >= a.spawners && spawnerCount <= b.spawners) {
-          // log-log interpolation for non-linear scaling
-          let logSpawners = Math.log(spawnerCount);
-          let logA = Math.log(a.spawners);
-          let logB = Math.log(b.spawners);
-          let logBonesA = Math.log(a.bones);
-          let logBonesB = Math.log(b.bones);
-          let t = (logSpawners - logA) / (logB - logA);
-          let logBones = logBonesA + t * (logBonesB - logBonesA);
-          return Math.exp(logBones);
-        }
+<footer>Built by MeSleeping6</footer>
+
+<div id="bg-toggle"></div>
+
+<script>
+  const dataPoints = [
+    { spawners: 1, bones: 2.07 },
+    { spawners: 5, bones: 10.16 },
+    { spawners: 10, bones: 20.22 },
+    { spawners: 100, bones: 190.05 },
+    { spawners: 500, bones: 737.90 },
+    { spawners: 800, bones: 992.47 },
+    { spawners: 1000, bones: 1113.32 },
+    { spawners: 1600, bones: 1332.60 }
+  ];
+
+  function interpolate(spawnerCount) {
+    if (spawnerCount <= dataPoints[0].spawners) return dataPoints[0].bones;
+    if (spawnerCount >= dataPoints[dataPoints.length-1].spawners) return dataPoints[dataPoints.length-1].bones;
+
+    for (let i = 0; i < dataPoints.length - 1; i++) {
+      let a = dataPoints[i];
+      let b = dataPoints[i + 1];
+      if (spawnerCount >= a.spawners && spawnerCount <= b.spawners) {
+        let logSpawners = Math.log(spawnerCount);
+        let logA = Math.log(a.spawners);
+        let logB = Math.log(b.spawners);
+        let logBonesA = Math.log(a.bones);
+        let logBonesB = Math.log(b.bones);
+        let t = (logSpawners - logA) / (logB - logA);
+        let logBones = logBonesA + t * (logBonesB - logBonesA);
+        return Math.exp(logBones);
       }
     }
+  }
 
-    function formatAbbreviated(value) {
-      if (value >= 1_000_000_000) return (value/1_000_000_000).toFixed(2) + 'B';
-      if (value >= 1_000_000) return (value/1_000_000).toFixed(2) + 'M';
-      if (value >= 1_000) return (value/1_000).toFixed(2) + 'K';
-      return value.toFixed(2);
+  function formatAbbreviated(value) {
+    if (value >= 1_000_000_000) return (value/1_000_000_000).toFixed(2) + 'B';
+    if (value >= 1_000_000) return (value/1_000_000).toFixed(2) + 'M';
+    if (value >= 1_000) return (value/1_000).toFixed(2) + 'K';
+    return value.toFixed(2);
+  }
+
+  function updateResult() {
+    const spawners = parseFloat(document.getElementById('spawners').value);
+    const multiplier = parseFloat(document.getElementById('timeframe').value);
+    const price = parseFloat(document.getElementById('price').value);
+    const unit = document.querySelector('input[name="unit"]:checked').value;
+
+    if (isNaN(spawners) || spawners < 1) {
+      document.getElementById('result').textContent = 'Enter a valid number of spawners';
+      return;
     }
 
-    function updateResult() {
-      const spawners = parseFloat(document.getElementById('spawners').value);
-      const multiplier = parseFloat(document.getElementById('timeframe').value);
-      const price = parseFloat(document.getElementById('price').value);
+    let bonesPerMin = interpolate(spawners);
+    if (unit === 'block') bonesPerMin /= 3; // convert bones to bone blocks
 
-      if (isNaN(spawners) || spawners < 1) {
-        document.getElementById('result').textContent = 'Enter a valid number of spawners';
-        return;
-      }
+    const totalBones = bonesPerMin * multiplier;
+    const earnings = price * totalBones;
 
-      const bonesPerMin = interpolate(spawners);
-      const totalBones = bonesPerMin * multiplier;
-      const earnings = price * totalBones;
+    document.getElementById('result').textContent = 
+      `${unit === 'bone' ? 'Bones' : 'Bone Blocks'}: ${formatAbbreviated(totalBones)} | Earnings: $${formatAbbreviated(earnings)}`;
+  }
 
-      document.getElementById('result').textContent = 
-        `Bones: ${formatAbbreviated(totalBones)} | Earnings: $${formatAbbreviated(earnings)}`;
-    }
+  document.getElementById('spawners').addEventListener('input', updateResult);
+  document.getElementById('timeframe').addEventListener('change', updateResult);
+  document.getElementById('price').addEventListener('input', updateResult);
+  document.querySelectorAll('input[name="unit"]').forEach(r => r.addEventListener('change', updateResult));
 
-    document.getElementById('spawners').addEventListener('input', updateResult);
-    document.getElementById('timeframe').addEventListener('change', updateResult);
-    document.getElementById('price').addEventListener('input', updateResult);
+  updateResult();
 
-    updateResult();
-  </script>
+  // Background color toggle
+  const bgToggle = document.getElementById('bg-toggle');
+  const colors = ['#ffffff', '#000000', '#1e3a8a']; // white, black, blue
+  let currentColor = 0;
+  bgToggle.style.background = colors[currentColor];
+
+  bgToggle.addEventListener('click', () => {
+    currentColor = (currentColor + 1) % colors.length;
+    document.body.style.background = colors[currentColor];
+    document.body.style.color = (colors[currentColor] === '#000000') ? '#ffffff' : '#222';
+    bgToggle.style.background = colors[currentColor];
+  });
+</script>
 </body>
 </html>
